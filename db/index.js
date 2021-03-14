@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize');
-const defaultConfig = require('../config').db
 let sequelize;
 
-function connect (config = defaultConfig) {
-  console.log('connecting');
+function getConnection (config) {
+  if (sequelize) return sequelize;
   sequelize = new Sequelize(
     config.database,
     config.username,
@@ -17,5 +16,5 @@ function connect (config = defaultConfig) {
 }
 
 module.exports = {
-  connect
+  getConnection
 }

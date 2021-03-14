@@ -3,8 +3,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const devTestRouter = require('./routes/dev-test-router');
-const { allowedNodeEnvironmentFlags } = require('process');
+const devTestRouter = require('./router/dev-test');
 
 const app = express();
 
@@ -28,7 +27,11 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  console.error(err);
+  res.json({
+    message: err.message,
+    error: err
+  });
 });
 
 module.exports = app;
