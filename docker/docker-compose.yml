@@ -1,0 +1,21 @@
+version: "2"
+
+volumes:
+  vol_rabbitmq:
+
+services:
+  robot-cleaner:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - 5432:5432
+    # volumes:
+    #   - ./99-recommender-schema.sql:/docker-entrypoint-initdb.d/99-recommender-schema.sql
+    #   - ./99-user-data.sql:/docker-entrypoint-initdb.d/99-user-data.sql
