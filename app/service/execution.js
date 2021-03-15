@@ -1,9 +1,6 @@
 const Execution = require('../../db/models/execution')
 
-const getFieldsOfPath = (oldField, {direction, steps}) => {
-  const fields = [];
-  let currentField = {...oldField};
-  for (let i = 0; i < steps; i++) {
+const _getNextField = (currentField, direction) => {
     let newField = {...currentField};
     switch (direction) {
       case 'north':
@@ -21,35 +18,35 @@ const getFieldsOfPath = (oldField, {direction, steps}) => {
       default:
         break;
     }
-    fields.push(newField)
-    currentField = newField
-  }
-  return fields;
+    return newField;
 }
 
-function calculateResult(start, commands) {
+function _calculateResult(start, commands) {
   const fieldSet = new Set();
-  commands.reduce((lastVisitedField, command) => {
-    fieldSet.add(`${lastVisitedField.x}${lastVisitedField.y}`)
-    const pathFields = getFieldsOfPath(lastVisitedField, command);
-    pathFields.forEach(f => fieldSet.add(`${f.x}${f.y}`));
-    return pathFields.pop();
-  }, {x: start.x, y: start.y})
+  let currentField = {...start}
+  fieldSet.add(`${currentField.x}${currentField.y}`)
+  for (let i = 0; i < commands.length; i++) {
+    const {direction, steps} = commands[i];
+    for (let j = 0; j < steps; j++) {
+      currentField = _getNextField(currentField, direction);
+      fieldSet.add(`${currentField.x}${currentField.y}`)
+    }
+  }
   return fieldSet.size;
+}
+
+function _parseHrtimeToSeconds(hrtime) {
+  const seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(6);
+  return seconds;
 }
 
 async function executeCleaning({start, commands}) {
   const startTime = process.hrtime();
-  const result = calculateResult(start, commands)
-  const duration = parseHrtimeToSeconds(process.hrtime(startTime));
+  const result = _calculateResult(start, commands)
+  const duration = _parseHrtimeToSeconds(process.hrtime(startTime));
   return addExecution({
     commmands: commands.length, result, duration, timestamp: new Date()
   })
-}
-
-function parseHrtimeToSeconds(hrtime) {
-  const seconds = (hrtime[0] + (hrtime[1] / 1e9)).toFixed(6);
-  return seconds;
 }
 
 async function addExecution(data = {
