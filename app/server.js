@@ -9,7 +9,6 @@ let server;
 
 function start(app, port) {
   const portNormalized = normalizePort(port);
-  console.log('portNormalized',portNormalized);
   app.set('port', portNormalized);
   server = http.createServer(app);
   server.listen(portNormalized);

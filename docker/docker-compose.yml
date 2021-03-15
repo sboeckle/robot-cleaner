@@ -8,14 +8,19 @@ services:
     build:
       context: ../
       dockerfile: ./docker/Dockerfile
+    environment:
+      - POSTGRES_HOST=postgres
     depends_on:
       - postgres
+    ports:
+      - 5000:5000
   postgres:
-    image: postgres
+    build:
+      context: ../
+      dockerfile: ./docker/DockerfileDB
     environment:
       - POSTGRES_PASSWORD=password
+      - POSTGRES_DATABASE=example
+      - POSTGRES_USER=postgres
     ports:
       - 5432:5432
-    # volumes:
-    #   - ./99-recommender-schema.sql:/docker-entrypoint-initdb.d/99-recommender-schema.sql
-    #   - ./99-user-data.sql:/docker-entrypoint-initdb.d/99-user-data.sql

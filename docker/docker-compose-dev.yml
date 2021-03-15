@@ -27,6 +27,3 @@ services:
       - POSTGRES_USER=postgres
     ports:
       - 5432:5432
-    # volumes:
-    #   - ./99-recommender-schema.sql:/docker-entrypoint-initdb.d/99-recommender-schema.sql
-    #   - ./99-user-data.sql:/docker-entrypoint-initdb.d/99-user-data.sql
