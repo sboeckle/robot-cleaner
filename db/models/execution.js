@@ -4,8 +4,8 @@ const sequelize = require('../index').getConnection()
 
 const Execution = sequelize.define("execution", {
   timestamp: { type: Sequelize.DATE },
-  commmands: { type: Sequelize.STRING },
-  result: { type: Sequelize.BOOLEAN },
+  commands: { type: Sequelize.NUMBER },
+  result: { type: Sequelize.NUMBER },
   duration: { type: Sequelize.DECIMAL }
 }, {timestamps: false});
 
