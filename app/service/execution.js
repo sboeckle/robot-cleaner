@@ -1,11 +1,44 @@
 const Execution = require('../../db/models/execution')
 
-function calculateResult(start, commands) {
-  //TBI
-  return commands.length
+const getFieldsOfPath = (oldField, {direction, steps}) => {
+  const fields = [];
+  let currentField = {...oldField};
+  for (let i = 0; i < steps; i++) {
+    let newField = {...currentField};
+    switch (direction) {
+      case 'north':
+        newField.y = newField.y + 1
+        break;
+      case 'south':
+        newField.y = newField.y - 1
+        break;
+      case 'east':
+        newField.x = newField.x + 1
+        break;
+      case 'west':
+        newField.x = newField.x - 1
+        break;
+      default:
+        break;
+    }
+    fields.push(newField)
+    currentField = newField
+  }
+  return fields;
 }
 
-async function executeCleaning(start, commands) {
+function calculateResult(start, commands) {
+  const fieldSet = new Set();
+  commands.reduce((lastVisitedField, command) => {
+    fieldSet.add(`${lastVisitedField.x}${lastVisitedField.y}`)
+    const pathFields = getFieldsOfPath(lastVisitedField, command);
+    pathFields.forEach(f => fieldSet.add(`${f.x}${f.y}`));
+    return pathFields.pop();
+  }, {x: start.x, y: start.y})
+  return fieldSet.size;
+}
+
+async function executeCleaning({start, commands}) {
   const startTime = process.hrtime();
   const result = calculateResult(start, commands)
   const duration = parseHrtimeToSeconds(process.hrtime(startTime));
@@ -32,7 +65,6 @@ async function addExecution(data = {
 
 async function getAllExecutions() {
   const executions = await Execution.findAll({});
-  console.log(executions);
   return executions.map(e => e.dataValues)
 }
 
