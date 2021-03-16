@@ -28,8 +28,9 @@ app.use(function(err, req, res, next) {
   console.error(err);
   res.json({
     message: err.message,
-    error: err
+    error: err.stack
   });
+  next(err);
 });
 
 module.exports = app;

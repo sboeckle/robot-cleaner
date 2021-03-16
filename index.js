@@ -7,4 +7,4 @@ sequelize.sync();
 const app = require('./app/express');
 const server = require('./app/server');
 
-server.start(app, config.server.port)
+server.start(app, config.server.port);

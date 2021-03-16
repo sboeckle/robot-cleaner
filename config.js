@@ -11,4 +11,4 @@ module.exports = {
     port: process.env.POSTGRES_PORT || 5432,
     executionsTable: 'executions',
   },
-}
+};

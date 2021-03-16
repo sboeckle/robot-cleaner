@@ -12,9 +12,9 @@ function getConnection (config) {
       dialect: config.dialect,
     }
   );
-  return sequelize
+  return sequelize;
 }
 
 module.exports = {
   getConnection
-}
+};

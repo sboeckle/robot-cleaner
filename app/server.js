@@ -6,15 +6,16 @@
 
 const http = require('http');
 let server;
+let usedPort;
 
 function start(app, port) {
-  const portNormalized = normalizePort(port);
-  app.set('port', portNormalized);
+  usedPort = normalizePort(port);
+  app.set('port', usedPort);
   server = http.createServer(app);
-  server.listen(portNormalized);
+  server.listen(usedPort);
   server.on('error', onError);
   server.on('listening', onListening);
-  return server
+  return server;
 }
 
 /**
@@ -46,8 +47,8 @@ function onError(error) {
   }
 
   const bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+    ? 'Pipe ' + usedPort
+    : 'Port ' + usedPort;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -78,4 +79,4 @@ function onListening() {
 
 module.exports = {
   start
-}
+};
