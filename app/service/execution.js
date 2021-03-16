@@ -17,7 +17,7 @@ function _calculateResult(start, commands) {
     const {direction, steps} = commands[i];
     for (let j = 0; j < steps; j++) {
       currentField = _oneStep[direction](currentField);
-      uniqueFields.add(`${currentField.x}${currentField.y}`);
+      uniqueFields.add(`X${currentField.x}Y${currentField.y}`);
     }
   }
   return uniqueFields.size;
